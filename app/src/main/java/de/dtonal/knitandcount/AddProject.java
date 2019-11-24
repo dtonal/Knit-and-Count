@@ -13,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectSavedListener;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.task.SaveProjectTask;
 
-public class AddProject extends AppCompatActivity {
+public class AddProject extends AppCompatActivity implements ProjectSavedListener {
     private static final String TAG = "AddProject";
     EditText editTextProjectName;
     Button buttonSaveProject;
+    SaveProjectTask saveProjectTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,14 +30,14 @@ public class AddProject extends AppCompatActivity {
         buttonSaveProject = findViewById(R.id.btnAddProject);
         editTextProjectName = findViewById(R.id.project_name);
 
+        saveProjectTask = new SaveProjectTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao());
+
         buttonSaveProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO add Project
                 Log.d(TAG, "Save Project: " + editTextProjectName.getText().toString());
                 Project newProject = new Project(editTextProjectName.getText().toString());
-                SaveProjectTask saveProjectTask = new SaveProjectTask(newProject);
-                saveProjectTask.execute();
+                saveProjectTask.execute(newProject);
             }
         });
     }
@@ -44,24 +47,8 @@ public class AddProject extends AppCompatActivity {
         startActivity(switchToMainAcitivityIntent);
     }
 
-    private class SaveProjectTask extends AsyncTask<Void, Void, Void> {
-
-        private Project projectToAdd;
-
-        SaveProjectTask(Project projectToAdd){
-            this.projectToAdd = projectToAdd;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao().insertProject(projectToAdd);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void nothing) {
-            super.onPostExecute(nothing);
-            switchToMainActivity();
-        }
+    @Override
+    public void onProjectSaved(Project project) {
+        switchToMainActivity();
     }
 }

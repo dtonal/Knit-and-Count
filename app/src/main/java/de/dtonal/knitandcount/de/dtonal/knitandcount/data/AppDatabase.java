@@ -7,18 +7,28 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.converter.Converters;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.CounterDao;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.ProjectDao;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 
-@Database(entities = {Project.class}, version = 2)
+@Database(entities = {Project.class, Counter.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProjectDao projectDao();
+    public abstract CounterDao counterDao();
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE project add column creation_date INTEGER");
+        }
+    };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `COUNTER` (`counter_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `creation_date` INTEGER, `value` INTEGER NOT NULL, `reset_value` INTEGER NOT NULL, `project_id` INTEGER NOT NULL, FOREIGN KEY(`project_id`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         }
     };
 }

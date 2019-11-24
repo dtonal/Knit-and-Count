@@ -22,8 +22,10 @@ import de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectsLoadedListener;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetProjectsTask;
 
-public class MainActivity extends AppCompatActivity implements OnProjectClickListener {
+public class MainActivity extends AppCompatActivity implements OnProjectClickListener, ProjectsLoadedListener {
 
     AppDatabase db = null;
     private static final String TAG = "MainActivity";
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
     private ProjectAdapter projectsAdapter;
 
     private ArrayList<Project> projects = new ArrayList<>();
-
+    private GetProjectsTask getProjectsTasks;
 
 
     @Override
@@ -48,13 +50,17 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
 
         initProjectsRecyclerView();
 
-        updateProjects();
+        initTasks();
 
+        updateProjects();
+    }
+
+    private void initTasks() {
+        this.getProjectsTasks = new GetProjectsTask(this, this.db.projectDao());
     }
 
     private void updateProjects() {
-        GetProjectsTask getProjectsTask = new GetProjectsTask();
-        getProjectsTask.execute();
+        getProjectsTasks.execute();
     }
 
     private void initProjectsRecyclerView() {
@@ -92,21 +98,9 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
         startActivity(showProjectIntent);
     }
 
-    private class GetProjectsTask extends AsyncTask<Void, Void, Project[]>{
-
-        @Override
-        protected Project[] doInBackground(Void... params) {
-            return db.projectDao().getAllProjects();
-        }
-
-        @Override
-        protected void onPostExecute(Project[] projects) {
-            super.onPostExecute(projects);
-            updateProjects(projects);
-        }
+    @Override
+    public void onProjectsLoaded(Project[] projects) {
+        this.projectsAdapter.setData(Arrays.asList(projects));
     }
 
-    private void updateProjects(Project[] allProjects) {
-        this.projectsAdapter.setData(Arrays.asList(allProjects));
-    }
 }

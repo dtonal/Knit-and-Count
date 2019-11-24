@@ -14,13 +14,13 @@ import de.dtonal.knitandcount.R;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
 
-class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
+public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
 
     private final List<Project> projects;
     private final OnProjectClickListener onProjectClickListener;
 
-   ProjectAdapter(List<Project> projects, OnProjectClickListener onProjectClickListener) {
+   public ProjectAdapter(List<Project> projects, OnProjectClickListener onProjectClickListener) {
         this.projects = projects;
         this.onProjectClickListener = onProjectClickListener;
     }
