@@ -1,10 +1,10 @@
 package de.dtonal.knitandcount;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,25 +14,28 @@ import androidx.room.Room;
 
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+
+import static de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase.MIGRATION_1_2;
 
 public class MainActivity extends AppCompatActivity {
 
     AppDatabase db = null;
     private static final String TAG = "MainActivity";
     private LinearLayoutManager layoutManager;
+    private FloatingActionButton fab;
+    private RecyclerView projectsRecycler;
+    private ProjectAdapter projectsAdapter;
 
-    private AppDatabase getOrInitAppDataBase(){
-        if(db == null){
-            db = Room.databaseBuilder(getApplicationContext(),
-                    AppDatabase.class, "database-name").build();
-        }
-        return db;
-    }
+    private ArrayList<Project> projects = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +43,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.db = DataBaseService.getOrInitAppDataBase(getApplicationContext());
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        initButton();
 
-        RecyclerView projectsRecycler = (RecyclerView) findViewById(R.id.projects_recycler);
+        initProjectsRecyclerView();
+
+        updateProjects();
+
+    }
+
+    private void updateProjects() {
+        GetProjectsTask getProjectsTask = new GetProjectsTask();
+        getProjectsTask.execute();
+    }
+
+    private void initProjectsRecyclerView() {
+        projectsRecycler = (RecyclerView) findViewById(R.id.projects_recycler);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -60,44 +69,38 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         projectsRecycler.setLayoutManager(layoutManager);
 
-        AsyncTask.execute(new Runnable() {
+        projectsAdapter = new ProjectAdapter(projects);
+        projectsRecycler.setAdapter(projectsAdapter);
+    }
+
+    private void initButton() {
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                Project toAdd = new Project();
-                toAdd.name = "haha";
-
-                getOrInitAppDataBase().projectDao().insertProject(toAdd);
-
-                Log.v(TAG, "Lets fetz");
-
-                Project[] projects = getOrInitAppDataBase().projectDao().getAllProjects();
-
-                Log.v(TAG, "Projetcs found: " + projects.length);
+            public void onClick(View view) {
+                Log.d(TAG, "floating action triggerd");
+                startActivity(new Intent(MainActivity.this, AddProject.class));
             }
         });
-
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private class GetProjectsTask extends AsyncTask<Void, Void, Project[]>{
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        @Override
+        protected Project[] doInBackground(Void... params) {
+            Project[] allProjects = db.projectDao().getAllProjects();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            return allProjects;
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        protected void onPostExecute(Project[] projects) {
+            super.onPostExecute(projects);
+            updateProjects(projects);
+        }
+    }
+
+    private void updateProjects(Project[] allProjects) {
+        this.projectsAdapter.setData(Arrays.asList(allProjects));
     }
 }
