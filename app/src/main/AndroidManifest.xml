@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddProject"/>
+        <activity android:name=".ShowProject"/>
     </application>
 
 </manifest>

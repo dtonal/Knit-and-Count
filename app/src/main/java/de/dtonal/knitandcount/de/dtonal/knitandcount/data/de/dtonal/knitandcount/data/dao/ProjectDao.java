@@ -10,8 +10,11 @@ import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount
 @Dao
 public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public long insertProject(Project project);
+    long insertProject(Project project);
 
     @Query("SELECT * FROM project order by creation_date")
-    public Project[] getAllProjects();
+    Project[] getAllProjects();
+
+    @Query("SELECT * FROM project where id = :id")
+    Project getById(int id);
 }

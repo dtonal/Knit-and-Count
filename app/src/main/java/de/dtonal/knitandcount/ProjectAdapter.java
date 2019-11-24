@@ -8,18 +8,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
 
 class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
 
     private final List<Project> projects;
+    private final OnProjectClickListener onProjectClickListener;
 
-    public ProjectAdapter(List<Project> projects) {
+   ProjectAdapter(List<Project> projects, OnProjectClickListener onProjectClickListener) {
         this.projects = projects;
+        this.onProjectClickListener = onProjectClickListener;
     }
 
     @NonNull
@@ -32,6 +34,7 @@ class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ProjectAdapter.ViewHolder holder, int position) {
         holder.textViewProjectName.setText(projects.get(position).getName());
+        holder.bind(position);
     }
 
     @Override
@@ -45,13 +48,22 @@ class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
         this.notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewProjectName;
+        TextView textViewProjectName;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewProjectName = itemView.findViewById(R.id.textViewProjectName);
+        }
+
+        void bind(final int position) {
+            this.itemView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    onProjectClickListener.onProjectClicked(projects.get(position));
+                }
+            });
         }
     }
 }

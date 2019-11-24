@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.util.Log;
 import android.view.View;
@@ -21,10 +20,9 @@ import java.util.Arrays;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
 
-import static de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase.MIGRATION_1_2;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnProjectClickListener {
 
     AppDatabase db = null;
     private static final String TAG = "MainActivity";
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initProjectsRecyclerView() {
-        projectsRecycler = (RecyclerView) findViewById(R.id.projects_recycler);
+        projectsRecycler = findViewById(R.id.projects_recycler);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -69,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         projectsRecycler.setLayoutManager(layoutManager);
 
-        projectsAdapter = new ProjectAdapter(projects);
+        projectsAdapter = new ProjectAdapter(projects, this);
         projectsRecycler.setAdapter(projectsAdapter);
+
     }
 
     private void initButton() {
@@ -84,13 +83,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onProjectClicked(Project project) {
+        Log.d(TAG, "Project was clicked: " + project.getName());
+        Intent showProjectIntent = new Intent(this, ShowProject.class);
+        showProjectIntent.putExtra("project_id", project.getId());
+        startActivity(showProjectIntent);
+    }
+
     private class GetProjectsTask extends AsyncTask<Void, Void, Project[]>{
 
         @Override
         protected Project[] doInBackground(Void... params) {
-            Project[] allProjects = db.projectDao().getAllProjects();
-
-            return allProjects;
+            return db.projectDao().getAllProjects();
         }
 
         @Override
