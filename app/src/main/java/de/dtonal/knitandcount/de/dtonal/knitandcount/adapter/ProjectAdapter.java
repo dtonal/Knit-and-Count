@@ -1,4 +1,4 @@
-package de.dtonal.knitandcount;
+package de.dtonal.knitandcount.de.dtonal.knitandcount.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.R;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
 
 class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {

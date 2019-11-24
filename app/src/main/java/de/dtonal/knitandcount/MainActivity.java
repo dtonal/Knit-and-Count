@@ -17,9 +17,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import de.dtonal.knitandcount.de.dtonal.knitandcount.adapter.ProjectAdapter;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
 
 public class MainActivity extends AppCompatActivity implements OnProjectClickListener {

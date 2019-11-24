@@ -1,4 +1,4 @@
-package de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model;
+package de.dtonal.knitandcount.de.dtonal.knitandcount.data.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

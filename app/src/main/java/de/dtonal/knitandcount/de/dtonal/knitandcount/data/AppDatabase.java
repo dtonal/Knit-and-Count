@@ -6,9 +6,9 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.Converters;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.dao.ProjectDao;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.converter.Converters;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.ProjectDao;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 
 @Database(entities = {Project.class}, version = 2)
 @TypeConverters({Converters.class})

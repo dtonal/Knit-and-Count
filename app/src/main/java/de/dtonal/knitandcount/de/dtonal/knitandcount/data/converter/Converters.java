@@ -1,4 +1,4 @@
-package de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data;
+package de.dtonal.knitandcount.de.dtonal.knitandcount.data.converter;
 
 import androidx.room.TypeConverter;
 

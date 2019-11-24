@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 
 public class ShowProject extends AppCompatActivity {
     private static final String TAG = "ShowProject";
