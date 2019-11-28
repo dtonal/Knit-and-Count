@@ -7,7 +7,6 @@ import java.lang.ref.WeakReference;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectSavedListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectsLoadedListener;
 
 //ProjectSavedListener
 public class SaveProjectTask extends AsyncTask<Project, Void, Project> {

@@ -3,6 +3,7 @@ package de.dtonal.knitandcount.de.dtonal.knitandcount.data.model;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import static androidx.room.ForeignKey.CASCADE;
         parentColumns = "id",
         childColumns = "project_id",
         onDelete = CASCADE
-))
+), indices = {@Index("project_id")})
 public class Counter {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="counter_id")

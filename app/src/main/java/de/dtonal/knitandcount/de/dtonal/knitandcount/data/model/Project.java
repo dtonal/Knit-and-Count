@@ -2,11 +2,12 @@ package de.dtonal.knitandcount.de.dtonal.knitandcount.data.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity
+@Entity(indices = {@Index("id")})
 public class Project {
 
     @PrimaryKey(autoGenerate = true)
