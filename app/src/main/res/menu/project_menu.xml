@@ -4,4 +4,7 @@
     <item android:title="@string/create_counter"
         android:id="@+id/createCounterMenuItem"
         />
+    <item android:title="@string/add_change_pdf"
+        android:id="@+id/addChangePdfMenuItem"
+        />
 </menu>
