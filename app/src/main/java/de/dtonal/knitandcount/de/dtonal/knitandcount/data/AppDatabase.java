@@ -12,7 +12,7 @@ import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
 
-@Database(entities = {Project.class, Counter.class}, version = 4)
+@Database(entities = {Project.class, Counter.class}, version = 5)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProjectDao projectDao();
@@ -38,6 +38,14 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_Project_id` ON Project (`id`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_Counter_project_id` ON Counter (`project_id`)");
+        }
+    };
+
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DELETE FROM counter");
         }
     };
 }

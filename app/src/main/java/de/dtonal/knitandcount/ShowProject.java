@@ -1,7 +1,7 @@
 package de.dtonal.knitandcount;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,12 +12,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.barteksc.pdfviewer.PDFView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import de.dtonal.knitandcount.de.dtonal.knitandcount.adapter.CounterAdapter;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
@@ -32,16 +43,22 @@ import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectForIdListen
 import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetCounterTask;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetProjectTask;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.task.SaveCounterTask;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.utils.FileUtil;
 
 public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener {
     private static final String TAG = "ShowProject";
+    private static final int PDF_REQUEST = 1;
+
     private TextView textViewProjectName;
+    private RecyclerView counterRecycler;
+    private PDFView pdfView;
+
     private GetCounterTask getCounterTask;
     private GetProjectTask getProjectTask;
     private SaveCounterTask saveCounterTask;
+
     private int project_id;
-    private RecyclerView counterRecycler;
-    private LinearLayoutManager layoutManager;
+
     private CounterAdapter counterAdapter;
     private CounterDao counterDao;
 
@@ -58,19 +75,15 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         initCounterRecycler();
 
         loadProject();
+
+        this.pdfView = findViewById(R.id.pdfView);
     }
 
     private void initCounterRecycler() {
         counterRecycler = findViewById(R.id.counter_recycler);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         counterRecycler.setHasFixedSize(true);
-
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         counterRecycler.setLayoutManager(layoutManager);
-
         counterAdapter = new CounterAdapter(new ArrayList<Counter>(), this);
         counterRecycler.setAdapter(counterAdapter);
     }
@@ -89,13 +102,50 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
             case R.id.createCounterMenuItem:
                 createNewCounter();
                 return true;
+            case R.id.addChangePdfMenuItem:
+                choosePdf();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void choosePdf() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+        startActivityForResult(intent, PDF_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PDF_REQUEST && resultCode == RESULT_OK && data != null) {
+            copyFileToProjectsFolder(data);
+            updatePdfView();
+        }
+    }
+
+    private void copyFileToProjectsFolder(@NotNull Intent data) {
+        File projectsDir = FileUtil.getOrCreateProjectFolder(getApplicationContext(), project_id);
+        File copy = new File(projectsDir+"/project.pdf");
+        try {
+            FileUtil.copyChosenDataContentToFile(getContentResolver(), data.getData(), copy);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePdfView() {
+        File projectsDir = FileUtil.getOrCreateProjectFolder(getApplicationContext(), project_id);
+        File projectPdf = new File(projectsDir+"/project.pdf");
+        if(projectPdf.exists()){
+             pdfView.fromFile(projectPdf).load();
+        }
+    }
+
+
     private void createNewCounter() {
-        Log.d(TAG, "CreateNewCounter");
         Intent switchToCreateNewCounterIntent = new Intent(this, AddCounter.class);
         switchToCreateNewCounterIntent.putExtra("project_id", project_id);
         startActivity(switchToCreateNewCounterIntent);
@@ -118,15 +168,14 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
 
     @Override
     public void counterForProject(Counter[] counter) {
-        Log.d(TAG, "Found counters: " + counter.length);
         counterAdapter.setData(Arrays.asList(counter));
-
     }
 
     @Override
     public void projectLoaded(Project project) {
         textViewProjectName.setText(project.getName());
         getCounterTask.execute(project);
+        updatePdfView();
     }
 
     @Override

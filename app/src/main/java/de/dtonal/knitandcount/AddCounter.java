@@ -21,6 +21,7 @@ public class AddCounter extends AppCompatActivity implements CounterSavedListene
     private Button btnSaveCounter;
     private SaveCounterTask saveCounterTask;
     private int projectId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +36,20 @@ public class AddCounter extends AppCompatActivity implements CounterSavedListene
 
         saveCounterTask = new SaveCounterTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao());
 
-        btnSaveCounter.setOnClickListener(new OnClickListener(){
+        btnSaveCounter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Counter counter = new Counter(counterName.getText().toString(), projectId);
+                try {
+                    counter.setResetValue(Integer.valueOf(resetValue.getText().toString()));
+                } catch (NumberFormatException e) {
+                    // its ok
+                }
+                try {
+                    counter.setValue(Integer.valueOf(startValue.getText().toString()));
+                } catch (NumberFormatException e) {
+                    //its ok
+                }
                 saveCounterTask.execute(counter);
             }
         });

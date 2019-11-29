@@ -14,6 +14,7 @@ import java.util.List;
 import de.dtonal.knitandcount.R;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.CounterInteractionListener;
+import de.dtonal.knitandcount.de.dtonal.knitandcount.service.CounterService;
 
 public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHolder> {
     private final List<Counter> counters;
@@ -49,16 +50,13 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
         this.notifyDataSetChanged();
     }
 
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView counterName;
         TextView counterValue;
         Button buttonIncrement;
         Button buttonDecrement;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             counterName = itemView.findViewById(R.id.counter_name);
             counterValue = itemView.findViewById(R.id.counter_value);
@@ -66,12 +64,12 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
             buttonDecrement = itemView.findViewById(R.id.counter_decrement);
         }
 
-        public void bind(final int position) {
+        void bind(final int position) {
             this.buttonIncrement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Counter counter = counters.get(position);
-                    counter.setValue(counter.getValue()+1);
+                    CounterService.increment(counter);
                     counterInteractionListener.onUpdatedCounter(counter);
                     counterValue.setText(String.valueOf(counter.getValue()));
                 }
@@ -80,7 +78,7 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
                     Counter counter = counters.get(position);
-                    counter.setValue(counter.getValue()-1);
+                    CounterService.decrement(counter);
                     counterInteractionListener.onUpdatedCounter(counter);
                     counterValue.setText(String.valueOf(counter.getValue()));
                 }
