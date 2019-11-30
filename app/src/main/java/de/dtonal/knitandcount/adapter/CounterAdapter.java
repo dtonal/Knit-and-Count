@@ -56,7 +56,6 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
         final TextView counterValue;
         final Button buttonIncrement;
         final Button buttonDecrement;
-        final ImageButton buttonSetup;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,7 +63,6 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
             counterValue = itemView.findViewById(R.id.counter_value);
             buttonIncrement = itemView.findViewById(R.id.counter_increment);
             buttonDecrement = itemView.findViewById(R.id.counter_decrement);
-            buttonSetup = itemView.findViewById(R.id.counter_setup);
         }
 
         void bind(final int position) {
@@ -86,7 +84,7 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
                     counterValue.setText(String.valueOf(counter.getValue()));
                 }
             });
-            this.buttonSetup.setOnClickListener(new View.OnClickListener() {
+            this.counterName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Counter counter = counters.get(position);

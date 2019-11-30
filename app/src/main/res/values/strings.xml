@@ -17,4 +17,5 @@
     <string name="delete_counter">Delete Counter</string>
     <string name="setup_counter">Setup Counter</string>
     <string name="increment">+</string>
+    <string name="save_project">Save Project</string>
 </resources>

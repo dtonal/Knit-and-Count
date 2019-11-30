@@ -11,11 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
 import de.dtonal.knitandcount.listener.project.ProjectSavedListener;
+import de.dtonal.knitandcount.service.ProjectService;
 import de.dtonal.knitandcount.task.project.SaveProjectTask;
 
-public class AddProject extends AppCompatActivity implements ProjectSavedListener {
+public class UpdateProject extends AppCompatActivity implements ProjectSavedListener, ProjectForIdListener {
     private static final String TAG = "AddProject";
     private EditText editTextProjectName;
     private EditText editTextNeedleSize;
@@ -26,6 +29,8 @@ public class AddProject extends AppCompatActivity implements ProjectSavedListene
     private EditText editTextNotes;
     private Button buttonSaveProject;
     private SaveProjectTask saveProjectTask;
+    private ProjectDao projectDao;
+    private Project project;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,31 +46,46 @@ public class AddProject extends AppCompatActivity implements ProjectSavedListene
         editTextYardage = findViewById(R.id.yardage);
         editTextNeedleSize = findViewById(R.id.needlesize);
 
-        saveProjectTask = new SaveProjectTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao());
+        int project_id = getIntent().getExtras().getInt("project_id");
+        this.projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
+        ProjectService.loadProjectById(project_id, this, projectDao);
+
+        saveProjectTask = new SaveProjectTask(this, projectDao);
 
         buttonSaveProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Save Project: " + editTextProjectName.getText().toString());
-                Project newProject = new Project(editTextProjectName.getText().toString());
-                newProject.setNeedleSize(editTextNeedleSize.getText().toString());
-                newProject.setYardage(editTextYardage.getText().toString());
-                newProject.setSize(editTextSize.getText().toString());
-                newProject.setGauge_wet(editTextGaugeWet.getText().toString());
-                newProject.setNotes(editTextNotes.getText().toString());
-                newProject.setGauge_dry(editTextGaugeDry.getText().toString());
-                saveProjectTask.execute(newProject);
+                project.setNeedleSize(editTextNeedleSize.getText().toString());
+                project.setYardage(editTextYardage.getText().toString());
+                project.setSize(editTextSize.getText().toString());
+                project.setGauge_wet(editTextGaugeWet.getText().toString());
+                project.setGauge_dry(editTextGaugeDry.getText().toString());
+                project.setNotes(editTextNotes.getText().toString());
+                saveProjectTask.execute(project);
             }
         });
     }
 
     private void switchToMainActivity() {
-        Intent switchToMainActivityIntent = new Intent(this, MainActivity.class);
-        startActivity(switchToMainActivityIntent);
+        Intent intent = new Intent(this, ShowProject.class);
+        intent.putExtra("project_id", project.getId());
+        startActivity(intent);
     }
 
     @Override
     public void onProjectSaved(Project project) {
         switchToMainActivity();
+    }
+
+    @Override
+    public void projectLoaded(Project project) {
+        this.project = project;
+        editTextGaugeDry.setText(project.getGauge_dry());
+        editTextGaugeWet.setText(project.getGauge_wet());
+        editTextNeedleSize.setText(project.getNeedleSize());
+        editTextNotes.setText(project.getNotes());
+        editTextProjectName.setText(project.getName());
+        editTextSize.setText(project.getSize());
+        editTextYardage.setText(project.getYardage());
     }
 }

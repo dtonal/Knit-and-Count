@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -189,10 +190,19 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     }
 
     @Override
-    public void projectLoaded(Project project) {
+    public void projectLoaded(final Project project) {
         textViewProjectName.setText(project.getName());
         getCounterTask.execute(project);
         updatePdfView();
+
+        textViewProjectName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowProject.this, UpdateProject.class);
+                intent.putExtra("project_id", project.getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

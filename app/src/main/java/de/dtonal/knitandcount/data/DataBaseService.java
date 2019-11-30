@@ -8,6 +8,7 @@ import static de.dtonal.knitandcount.data.AppDatabase.MIGRATION_1_2;
 import static de.dtonal.knitandcount.data.AppDatabase.MIGRATION_2_3;
 import static de.dtonal.knitandcount.data.AppDatabase.MIGRATION_3_4;
 import static de.dtonal.knitandcount.data.AppDatabase.MIGRATION_4_5;
+import static de.dtonal.knitandcount.data.AppDatabase.MIGRATION_5_6;
 
 public class DataBaseService {
     private static AppDatabase db;
@@ -20,6 +21,7 @@ public class DataBaseService {
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
                     .build();
         }
         return db;

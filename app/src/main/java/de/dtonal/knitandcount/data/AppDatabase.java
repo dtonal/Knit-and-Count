@@ -12,7 +12,7 @@ import de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.data.model.Project;
 
-@Database(entities = {Project.class, Counter.class}, version = 5)
+@Database(entities = {Project.class, Counter.class}, version = 6)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract ProjectDao projectDao();
@@ -46,6 +46,18 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DELETE FROM counter");
+        }
+    };
+
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE project add column notes TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE project add column gauge_dry TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE project add column gauge_wet TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE project add column size TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE project add column yardage TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE project add column needleSize TEXT DEFAULT ''");
         }
     };
 }
