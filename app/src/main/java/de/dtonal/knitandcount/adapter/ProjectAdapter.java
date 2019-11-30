@@ -51,7 +51,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewProjectName;
+        final TextView textViewProjectName;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

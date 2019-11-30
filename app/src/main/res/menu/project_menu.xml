@@ -3,8 +3,10 @@
 
     <item android:title="@string/create_counter"
         android:id="@+id/createCounterMenuItem"
+        android:icon="@drawable/ic_add"
         />
     <item android:title="@string/add_change_pdf"
         android:id="@+id/addChangePdfMenuItem"
+        android:icon="@drawable/ic_pdf"
         />
 </menu>

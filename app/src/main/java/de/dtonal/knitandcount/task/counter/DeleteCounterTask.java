@@ -9,8 +9,8 @@ import de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.listener.counter.CounterDeletedListener;
 
 public class DeleteCounterTask extends AsyncTask<Counter, Void, Counter[]> {
-    private WeakReference<CounterDeletedListener> listener;
-    private CounterDao counterDao;
+    private final WeakReference<CounterDeletedListener> listener;
+    private final CounterDao counterDao;
 
     public DeleteCounterTask(CounterDeletedListener listener, CounterDao counterDao) {
         this.listener = new WeakReference<>(listener);

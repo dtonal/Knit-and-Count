@@ -9,8 +9,8 @@ import de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
 
 public class GetProjectTask extends AsyncTask<Integer, Void, Project> {
-    private WeakReference<ProjectForIdListener> listener;
-    private ProjectDao projectDao;
+    private final WeakReference<ProjectForIdListener> listener;
+    private final ProjectDao projectDao;
 
     public GetProjectTask(ProjectForIdListener projectForIdListener, ProjectDao projectDao) {
         this.projectDao = projectDao;

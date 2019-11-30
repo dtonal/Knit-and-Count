@@ -10,8 +10,8 @@ import de.dtonal.knitandcount.listener.project.ProjectSavedListener;
 
 //ProjectSavedListener
 public class SaveProjectTask extends AsyncTask<Project, Void, Project> {
-    private WeakReference<ProjectSavedListener> listenerReference;
-    private ProjectDao projectDao;
+    private final WeakReference<ProjectSavedListener> listenerReference;
+    private final ProjectDao projectDao;
 
     public SaveProjectTask(ProjectSavedListener listener, ProjectDao projectDao) {
         this.projectDao = projectDao;

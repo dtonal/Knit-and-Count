@@ -46,4 +46,6 @@ public class Project {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
+
+    //TODO: Nadelstärke, Lauflänge m / 100grm, Größe, Maschenprobe 10 x 10cm nass, Maschenprobe 10x10 trocken, Notizen
 }

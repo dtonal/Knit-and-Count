@@ -26,14 +26,11 @@ import de.dtonal.knitandcount.task.project.GetProjectsTask;
 
 public class MainActivity extends AppCompatActivity implements OnProjectClickListener, ProjectsLoadedListener {
 
-    AppDatabase db = null;
+    private AppDatabase db = null;
     private static final String TAG = "MainActivity";
-    private LinearLayoutManager layoutManager;
-    private FloatingActionButton fab;
-    private RecyclerView projectsRecycler;
     private ProjectAdapter projectsAdapter;
 
-    private ArrayList<Project> projects = new ArrayList<>();
+    private final ArrayList<Project> projects = new ArrayList<>();
     private GetProjectsTask getProjectsTasks;
 
 
@@ -63,14 +60,14 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
     }
 
     private void initProjectsRecyclerView() {
-        projectsRecycler = findViewById(R.id.projects_recycler);
+        RecyclerView projectsRecycler = findViewById(R.id.projects_recycler);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         projectsRecycler.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         projectsRecycler.setLayoutManager(layoutManager);
 
         projectsAdapter = new ProjectAdapter(projects, this);
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
     }
 
     private void initButton() {
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

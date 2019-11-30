@@ -18,7 +18,6 @@ public class AddCounter extends AppCompatActivity implements CounterSavedListene
     private EditText counterName;
     private EditText startValue;
     private EditText resetValue;
-    private Button btnSaveCounter;
     private SaveCounterTask saveCounterTask;
     private int projectId;
 
@@ -32,7 +31,7 @@ public class AddCounter extends AppCompatActivity implements CounterSavedListene
         counterName = findViewById(R.id.counterName);
         startValue = findViewById(R.id.startValue);
         resetValue = findViewById(R.id.resetValue);
-        btnSaveCounter = findViewById(R.id.btnSaveCounter);
+        Button btnSaveCounter = findViewById(R.id.btnSaveCounter);
 
         saveCounterTask = new SaveCounterTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao());
 

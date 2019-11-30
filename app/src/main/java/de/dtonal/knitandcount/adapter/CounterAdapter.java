@@ -52,11 +52,11 @@ public class CounterAdapter extends RecyclerView.Adapter<CounterAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView counterName;
-        TextView counterValue;
-        Button buttonIncrement;
-        Button buttonDecrement;
-        ImageButton buttonSetup;
+        final TextView counterName;
+        final TextView counterValue;
+        final Button buttonIncrement;
+        final Button buttonDecrement;
+        final ImageButton buttonSetup;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -23,8 +23,6 @@ public class UpdateCounter extends AppCompatActivity implements CounterSavedList
     private EditText resetValue;
     private Button btnSaveCounter;
     private Button btnDeleteCounter;
-    private SaveCounterTask saveCounterTask;
-    private int counterId;
     private Counter counter;
     private CounterDao counterDao;
 
@@ -33,7 +31,7 @@ public class UpdateCounter extends AppCompatActivity implements CounterSavedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_counter);
 
-        counterId = getIntent().getExtras().getInt("counter_id");
+        int counterId = getIntent().getExtras().getInt("counter_id");
 
         counterName = findViewById(R.id.counterName);
         startValue = findViewById(R.id.startValue);
@@ -44,7 +42,7 @@ public class UpdateCounter extends AppCompatActivity implements CounterSavedList
 
         startValue.setHint("Current value");
 
-        saveCounterTask = new SaveCounterTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao());
+        SaveCounterTask saveCounterTask = new SaveCounterTask(this, DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao());
 
         btnSaveCounter.setEnabled(false);
         btnDeleteCounter.setEnabled(false);

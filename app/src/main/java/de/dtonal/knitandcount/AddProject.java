@@ -17,9 +17,9 @@ import de.dtonal.knitandcount.task.project.SaveProjectTask;
 
 public class AddProject extends AppCompatActivity implements ProjectSavedListener {
     private static final String TAG = "AddProject";
-    EditText editTextProjectName;
-    Button buttonSaveProject;
-    SaveProjectTask saveProjectTask;
+    private EditText editTextProjectName;
+    private Button buttonSaveProject;
+    private SaveProjectTask saveProjectTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

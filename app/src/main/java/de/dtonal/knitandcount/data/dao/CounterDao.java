@@ -11,7 +11,7 @@ import de.dtonal.knitandcount.data.model.Counter;
 @Dao
 public interface CounterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertCounter(Counter counter);
+    void insertCounter(Counter counter);
 
     @Query("SELECT * from counter where project_id = :projectId")
     Counter[] getCounterByProjectId(int projectId);

@@ -1,6 +1,8 @@
 package de.dtonal.knitandcount;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,17 +46,16 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     private static final int PDF_REQUEST = 1;
 
     private TextView textViewProjectName;
-    private RecyclerView counterRecycler;
     private PDFView pdfView;
 
     private GetCountersForProjectTask getCounterTask;
     private GetProjectTask getProjectTask;
-    private SaveCounterTask saveCounterTask;
 
     private int project_id;
 
     private CounterAdapter counterAdapter;
     private CounterDao counterDao;
+    private GridLayoutManager layoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,18 +75,40 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     }
 
     private void initCounterRecycler() {
-        counterRecycler = findViewById(R.id.counter_recycler);
+        RecyclerView counterRecycler = findViewById(R.id.counter_recycler);
         counterRecycler.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        layoutManager = new GridLayoutManager(this,2);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            layoutManager.setSpanCount(4);
+        }
+
         counterRecycler.setLayoutManager(layoutManager);
         counterAdapter = new CounterAdapter(new ArrayList<Counter>(), this);
         counterRecycler.setAdapter(counterAdapter);
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            layoutManager.setSpanCount(4);
+        }else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            layoutManager.setSpanCount(2);
+        }
+
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.project_menu, menu);
+
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+
         return true;
     }
 
@@ -173,8 +197,8 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
 
     @Override
     public void onUpdatedCounter(Counter counter) {
-        this.saveCounterTask = new SaveCounterTask(this, this.counterDao);
-        this.saveCounterTask.execute(counter);
+        SaveCounterTask saveCounterTask = new SaveCounterTask(this, this.counterDao);
+        saveCounterTask.execute(counter);
     }
 
     @Override

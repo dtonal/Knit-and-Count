@@ -9,8 +9,8 @@ import de.dtonal.knitandcount.data.model.Counter;
 import de.dtonal.knitandcount.listener.counter.CounterLoadedListener;
 
 public class GetCounterTask extends AsyncTask<Integer, Void, Counter> {
-    private WeakReference<CounterLoadedListener> listener;
-    private CounterDao counterDao;
+    private final WeakReference<CounterLoadedListener> listener;
+    private final CounterDao counterDao;
 
     public GetCounterTask(CounterLoadedListener counterForProjectListener, CounterDao counterDao) {
         this.listener = new WeakReference<>(counterForProjectListener);

@@ -10,7 +10,7 @@ import de.dtonal.knitandcount.data.model.Project;
 @Dao
 public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertProject(Project project);
+    void insertProject(Project project);
 
     @Query("SELECT * FROM project order by creation_date")
     Project[] getAllProjects();
