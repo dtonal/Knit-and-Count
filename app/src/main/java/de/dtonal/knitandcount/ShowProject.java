@@ -1,7 +1,6 @@
 package de.dtonal.knitandcount;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,37 +12,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.barteksc.pdfviewer.PDFView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.adapter.CounterAdapter;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.CounterDao;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.dao.ProjectDao;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Counter;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.CounterForProjectListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.CounterInteractionListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.CounterSavedListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectForIdListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetCounterTask;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetProjectTask;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.SaveCounterTask;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.utils.FileUtil;
+import de.dtonal.knitandcount.adapter.CounterAdapter;
+import de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.data.dao.CounterDao;
+import de.dtonal.knitandcount.data.dao.ProjectDao;
+import de.dtonal.knitandcount.data.model.Counter;
+import de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.listener.counter.CounterForProjectListener;
+import de.dtonal.knitandcount.listener.counter.CounterInteractionListener;
+import de.dtonal.knitandcount.listener.counter.CounterSavedListener;
+import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
+import de.dtonal.knitandcount.task.counter.GetCountersForProjectTask;
+import de.dtonal.knitandcount.task.project.GetProjectTask;
+import de.dtonal.knitandcount.task.counter.SaveCounterTask;
+import de.dtonal.knitandcount.utils.FileUtil;
 
 public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener {
     private static final String TAG = "ShowProject";
@@ -53,7 +46,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     private RecyclerView counterRecycler;
     private PDFView pdfView;
 
-    private GetCounterTask getCounterTask;
+    private GetCountersForProjectTask getCounterTask;
     private GetProjectTask getProjectTask;
     private SaveCounterTask saveCounterTask;
 
@@ -160,7 +153,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
 
     private void initTasks() {
         counterDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao();
-        this.getCounterTask = new GetCounterTask(this, counterDao);
+        this.getCounterTask = new GetCountersForProjectTask(this, counterDao);
         ProjectDao projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
         this.getProjectTask = new GetProjectTask(this, projectDao);
     }
@@ -182,6 +175,13 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     public void onUpdatedCounter(Counter counter) {
         this.saveCounterTask = new SaveCounterTask(this, this.counterDao);
         this.saveCounterTask.execute(counter);
+    }
+
+    @Override
+    public void onEditCounter(Counter counter) {
+        Intent intent = new Intent(this, UpdateCounter.class);
+        intent.putExtra("counter_id", counter.getId());
+        startActivity(intent);
     }
 
     @Override

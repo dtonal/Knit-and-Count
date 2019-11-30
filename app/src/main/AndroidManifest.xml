@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddProject" />
+        <activity android:name=".UpdateCounter"/>
         <activity android:name=".ShowProject"
             android:permission="android.permission.READ_EXTERNAL_STORAGE"/>
     </application>

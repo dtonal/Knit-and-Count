@@ -1,7 +1,6 @@
 package de.dtonal.knitandcount;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,10 +10,10 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectSavedListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.SaveProjectTask;
+import de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.listener.project.ProjectSavedListener;
+import de.dtonal.knitandcount.task.project.SaveProjectTask;
 
 public class AddProject extends AppCompatActivity implements ProjectSavedListener {
     private static final String TAG = "AddProject";

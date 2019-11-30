@@ -14,4 +14,7 @@
     <string name="decrement">-</string>
     <string name="counter_value_placeholder">---</string>
     <string name="add_change_pdf">Add/Change PDF</string>
+    <string name="delete_counter">Delete Counter</string>
+    <string name="setup_counter">Setup Counter</string>
+    <string name="increment">+</string>
 </resources>

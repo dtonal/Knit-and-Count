@@ -1,7 +1,6 @@
 package de.dtonal.knitandcount;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,13 +16,13 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.adapter.ProjectAdapter;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.AppDatabase;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Project;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.OnProjectClickListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.ProjectsLoadedListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.GetProjectsTask;
+import de.dtonal.knitandcount.adapter.ProjectAdapter;
+import de.dtonal.knitandcount.data.AppDatabase;
+import de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.data.model.Project;
+import de.dtonal.knitandcount.listener.project.OnProjectClickListener;
+import de.dtonal.knitandcount.listener.project.ProjectsLoadedListener;
+import de.dtonal.knitandcount.task.project.GetProjectsTask;
 
 public class MainActivity extends AppCompatActivity implements OnProjectClickListener, ProjectsLoadedListener {
 

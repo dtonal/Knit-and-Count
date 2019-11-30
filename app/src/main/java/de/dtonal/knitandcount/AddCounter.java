@@ -9,10 +9,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.DataBaseService;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.data.model.Counter;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.listener.CounterSavedListener;
-import de.dtonal.knitandcount.de.dtonal.knitandcount.task.SaveCounterTask;
+import de.dtonal.knitandcount.data.DataBaseService;
+import de.dtonal.knitandcount.data.model.Counter;
+import de.dtonal.knitandcount.listener.counter.CounterSavedListener;
+import de.dtonal.knitandcount.task.counter.SaveCounterTask;
 
 public class AddCounter extends AppCompatActivity implements CounterSavedListener {
     private EditText counterName;
