@@ -36,13 +36,15 @@ import de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.listener.counter.CounterForProjectListener;
 import de.dtonal.knitandcount.listener.counter.CounterInteractionListener;
 import de.dtonal.knitandcount.listener.counter.CounterSavedListener;
+import de.dtonal.knitandcount.listener.project.ProjectDeletedListener;
 import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
+import de.dtonal.knitandcount.service.ProjectService;
 import de.dtonal.knitandcount.task.counter.GetCountersForProjectTask;
 import de.dtonal.knitandcount.task.project.GetProjectTask;
 import de.dtonal.knitandcount.task.counter.SaveCounterTask;
 import de.dtonal.knitandcount.utils.FileUtil;
 
-public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener {
+public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener, ProjectDeletedListener {
     private static final String TAG = "ShowProject";
     private static final int PDF_REQUEST = 1;
 
@@ -57,6 +59,8 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     private CounterAdapter counterAdapter;
     private CounterDao counterDao;
     private GridLayoutManager layoutManager;
+    private Project project;
+    private ProjectDao projectDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,6 +127,8 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
             case R.id.addChangePdfMenuItem:
                 choosePdf();
                 return true;
+            case R.id.deleteProject:
+                ProjectService.deleteProject(this.project, this, projectDao);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -179,7 +185,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     private void initTasks() {
         counterDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).counterDao();
         this.getCounterTask = new GetCountersForProjectTask(this, counterDao);
-        ProjectDao projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
+        projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
         this.getProjectTask = new GetProjectTask(this, projectDao);
     }
 
@@ -203,6 +209,8 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
                 startActivity(intent);
             }
         });
+
+        this.project = project;
     }
 
     @Override
@@ -221,5 +229,11 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     @Override
     public void onCounterSaved(Counter counter) {
         Log.d(TAG, "Counter saved");
+    }
+
+    @Override
+    public void onProjectDeleted(Project project) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

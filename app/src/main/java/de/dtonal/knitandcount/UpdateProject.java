@@ -2,7 +2,6 @@ package de.dtonal.knitandcount;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +26,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
     private EditText editTextGaugeWet;
     private EditText editTextGaugeDry;
     private EditText editTextNotes;
-    private Button buttonSaveProject;
     private SaveProjectTask saveProjectTask;
-    private ProjectDao projectDao;
     private Project project;
 
     @Override
@@ -37,7 +34,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_project);
 
-        buttonSaveProject = findViewById(R.id.btnAddProject);
+        Button buttonSaveProject = findViewById(R.id.btnAddProject);
         editTextProjectName = findViewById(R.id.project_name);
         editTextNotes = findViewById(R.id.notes);
         editTextGaugeDry = findViewById(R.id.gauge_dry);
@@ -47,7 +44,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
         editTextNeedleSize = findViewById(R.id.needlesize);
 
         int project_id = getIntent().getExtras().getInt("project_id");
-        this.projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
+        ProjectDao projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
         ProjectService.loadProjectById(project_id, this, projectDao);
 
         saveProjectTask = new SaveProjectTask(this, projectDao);
@@ -61,6 +58,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
                 project.setGauge_wet(editTextGaugeWet.getText().toString());
                 project.setGauge_dry(editTextGaugeDry.getText().toString());
                 project.setNotes(editTextNotes.getText().toString());
+                project.setName(editTextProjectName.getText().toString());
                 saveProjectTask.execute(project);
             }
         });

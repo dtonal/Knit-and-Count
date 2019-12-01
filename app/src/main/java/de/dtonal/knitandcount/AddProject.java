@@ -24,7 +24,6 @@ public class AddProject extends AppCompatActivity implements ProjectSavedListene
     private EditText editTextGaugeWet;
     private EditText editTextGaugeDry;
     private EditText editTextNotes;
-    private Button buttonSaveProject;
     private SaveProjectTask saveProjectTask;
 
     @Override
@@ -32,7 +31,7 @@ public class AddProject extends AppCompatActivity implements ProjectSavedListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_project);
 
-        buttonSaveProject = findViewById(R.id.btnAddProject);
+        Button buttonSaveProject = findViewById(R.id.btnAddProject);
         editTextProjectName = findViewById(R.id.project_name);
         editTextNotes = findViewById(R.id.notes);
         editTextGaugeDry = findViewById(R.id.gauge_dry);

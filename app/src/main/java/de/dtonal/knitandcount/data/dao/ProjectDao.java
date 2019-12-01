@@ -1,6 +1,7 @@
 package de.dtonal.knitandcount.data.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -17,4 +18,7 @@ public interface ProjectDao {
 
     @Query("SELECT * FROM project where id = :id")
     Project getById(int id);
+
+    @Delete
+    void deleteProject(Project project);
 }

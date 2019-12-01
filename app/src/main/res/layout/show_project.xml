@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="@string/project"
         android:textSize="20sp"
-        android:padding="10px"/>
+        android:padding="6dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="6"
-            android:paddingLeft="10px"
-            android:paddingRight="10px"/>
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
         <com.github.barteksc.pdfviewer.PDFView
             android:id="@+id/pdfView"
             android:layout_width="match_parent"

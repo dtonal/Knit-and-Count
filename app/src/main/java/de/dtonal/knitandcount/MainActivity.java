@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -22,17 +21,19 @@ import de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.listener.project.OnProjectClickListener;
 import de.dtonal.knitandcount.listener.project.ProjectsLoadedListener;
-import de.dtonal.knitandcount.task.project.GetProjectsTask;
+import de.dtonal.knitandcount.service.ProjectService;
 
 public class MainActivity extends AppCompatActivity implements OnProjectClickListener, ProjectsLoadedListener {
-
     private AppDatabase db = null;
-    private static final String TAG = "MainActivity";
     private ProjectAdapter projectsAdapter;
 
     private final ArrayList<Project> projects = new ArrayList<>();
-    private GetProjectsTask getProjectsTasks;
 
+    @Override
+    protected void onRestart() {
+        updateProjects();
+        super.onRestart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +47,11 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
 
         initProjectsRecyclerView();
 
-        initTasks();
-
         updateProjects();
     }
 
-    private void initTasks() {
-        this.getProjectsTasks = new GetProjectsTask(this, this.db.projectDao());
-    }
-
     private void updateProjects() {
-        getProjectsTasks.execute();
+        ProjectService.loadAllProjects(this, this.db.projectDao());
     }
 
     private void initProjectsRecyclerView() {
@@ -80,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "floating action triggerd");
                 startActivity(new Intent(MainActivity.this, AddProject.class));
             }
         });
@@ -88,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements OnProjectClickLis
 
     @Override
     public void onProjectClicked(Project project) {
-        Log.d(TAG, "Project was clicked: " + project.getName());
         Intent showProjectIntent = new Intent(this, ShowProject.class);
         showProjectIntent.putExtra("project_id", project.getId());
         startActivity(showProjectIntent);
