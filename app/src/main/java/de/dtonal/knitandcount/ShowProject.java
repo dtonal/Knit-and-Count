@@ -40,8 +40,8 @@ import de.dtonal.knitandcount.listener.project.ProjectDeletedListener;
 import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
 import de.dtonal.knitandcount.service.ProjectService;
 import de.dtonal.knitandcount.task.counter.GetCountersForProjectTask;
-import de.dtonal.knitandcount.task.project.GetProjectTask;
 import de.dtonal.knitandcount.task.counter.SaveCounterTask;
+import de.dtonal.knitandcount.task.project.GetProjectTask;
 import de.dtonal.knitandcount.utils.FileUtil;
 
 public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener, ProjectDeletedListener {
@@ -84,7 +84,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         counterRecycler.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(this,2);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            layoutManager.setSpanCount(4);
+            layoutManager.setSpanCount(1);
         }
 
         counterRecycler.setLayoutManager(layoutManager);
