@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import de.dtonal.knitandcount.data.model.Project;
 
@@ -21,4 +22,7 @@ public interface ProjectDao {
 
     @Delete
     void deleteProject(Project project);
+
+    @Update
+    void updateProject(Project project);
 }

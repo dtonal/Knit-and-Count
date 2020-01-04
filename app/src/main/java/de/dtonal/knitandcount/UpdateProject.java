@@ -15,7 +15,7 @@ import de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
 import de.dtonal.knitandcount.listener.project.ProjectSavedListener;
 import de.dtonal.knitandcount.service.ProjectService;
-import de.dtonal.knitandcount.task.project.SaveProjectTask;
+import de.dtonal.knitandcount.task.project.UpdateProjectTask;
 
 public class UpdateProject extends AppCompatActivity implements ProjectSavedListener, ProjectForIdListener {
     private static final String TAG = "AddProject";
@@ -26,7 +26,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
     private EditText editTextGaugeWet;
     private EditText editTextGaugeDry;
     private EditText editTextNotes;
-    private SaveProjectTask saveProjectTask;
+    private UpdateProjectTask updateProjectTask;
     private Project project;
 
     @Override
@@ -47,7 +47,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
         ProjectDao projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
         ProjectService.loadProjectById(project_id, this, projectDao);
 
-        saveProjectTask = new SaveProjectTask(this, projectDao);
+        updateProjectTask = new UpdateProjectTask(this, projectDao);
 
         buttonSaveProject.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +59,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
                 project.setGauge_dry(editTextGaugeDry.getText().toString());
                 project.setNotes(editTextNotes.getText().toString());
                 project.setName(editTextProjectName.getText().toString());
-                saveProjectTask.execute(project);
+                updateProjectTask.execute(project);
             }
         });
     }

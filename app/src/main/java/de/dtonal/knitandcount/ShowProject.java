@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,21 +31,26 @@ import java.util.Arrays;
 import de.dtonal.knitandcount.adapter.CounterAdapter;
 import de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.data.dao.CounterDao;
+import de.dtonal.knitandcount.data.dao.PdfStateDao;
 import de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.data.model.Counter;
+import de.dtonal.knitandcount.data.model.PdfState;
 import de.dtonal.knitandcount.data.model.Project;
 import de.dtonal.knitandcount.listener.counter.CounterForProjectListener;
 import de.dtonal.knitandcount.listener.counter.CounterInteractionListener;
 import de.dtonal.knitandcount.listener.counter.CounterSavedListener;
+import de.dtonal.knitandcount.listener.pdfState.PdfStateLoadedListener;
 import de.dtonal.knitandcount.listener.project.ProjectDeletedListener;
 import de.dtonal.knitandcount.listener.project.ProjectForIdListener;
 import de.dtonal.knitandcount.service.ProjectService;
 import de.dtonal.knitandcount.task.counter.GetCountersForProjectTask;
 import de.dtonal.knitandcount.task.counter.SaveCounterTask;
+import de.dtonal.knitandcount.task.pdfState.GetPdfStateTask;
+import de.dtonal.knitandcount.task.pdfState.SavePdfStateTask;
 import de.dtonal.knitandcount.task.project.GetProjectTask;
 import de.dtonal.knitandcount.utils.FileUtil;
 
-public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener, ProjectDeletedListener {
+public class ShowProject extends AppCompatActivity implements CounterForProjectListener, ProjectForIdListener, CounterInteractionListener, CounterSavedListener, ProjectDeletedListener, OnRenderListener, PdfStateLoadedListener {
     private static final String TAG = "ShowProject";
     private static final int PDF_REQUEST = 1;
 
@@ -61,6 +67,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     private GridLayoutManager layoutManager;
     private Project project;
     private ProjectDao projectDao;
+    private PdfState pdfState;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,13 +77,18 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
 
         textViewProjectName = findViewById(R.id.project_title);
 
+        this.pdfView = findViewById(R.id.pdfView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         initTasks();
 
         initCounterRecycler();
 
         loadProject();
-
-        this.pdfView = findViewById(R.id.pdfView);
     }
 
     private void initCounterRecycler() {
@@ -146,6 +158,9 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PDF_REQUEST && resultCode == RESULT_OK && data != null) {
             copyFileToProjectsFolder(data);
+            if (this.pdfState != null) {
+                this.pdfState.update(1f, 0f, 0f);
+            }
             updatePdfView();
         }
     }
@@ -164,7 +179,7 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         File projectsDir = FileUtil.getOrCreateProjectFolder(getApplicationContext(), project_id);
         File projectPdf = new File(projectsDir+"/project.pdf");
         if(projectPdf.exists()){
-             pdfView.fromFile(projectPdf).load();
+            pdfView.fromFile(projectPdf).onRender(this).load();
         }
     }
 
@@ -235,5 +250,33 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
     public void onProjectDeleted(Project project) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onInitiallyRendered(int nbPages) {
+        PdfStateDao pdfStateDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).pdfStateDao();
+        GetPdfStateTask getPdfStateTask = new GetPdfStateTask(this, pdfStateDao);
+        getPdfStateTask.execute(this.project_id);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.pdfState != null) {
+            this.pdfState.update(pdfView.getZoom(), pdfView.getCurrentXOffset(), pdfView.getCurrentYOffset());
+            SavePdfStateTask savePdfStateTask = new SavePdfStateTask(DataBaseService.getOrInitAppDataBase(getApplicationContext()).pdfStateDao());
+            savePdfStateTask.execute(this.pdfState);
+        }
+    }
+
+    @Override
+    public void onPdfStateLoaded(PdfState pdfState) {
+        this.pdfState = pdfState;
+        if (this.pdfState == null) {
+            this.pdfState = new PdfState(this.project_id);
+        }
+        pdfView.zoomTo(this.pdfState.getZoom());
+        pdfView.moveTo(this.pdfState.getOffsetX(), this.pdfState.getOffsetY());
+        pdfView.loadPages();
     }
 }
