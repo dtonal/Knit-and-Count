@@ -17,8 +17,8 @@
     <string name="meterage_m_100g">Meterage (m/100g)</string>
     <string name="size">Size</string>
     <string name="needlesize">Needlesize</string>
-    <string name="wet_gauge_10cm_x_10cm">Wet gauge (10cm x 10cm)</string>
-    <string name="dry_gauge_10cm_x_10cm">Dry gauge (10cm x 10cm)</string>
+    <string name="wet_gauge_10cm_x_10cm">Washed gauge (10cm x 10cm)</string>
+    <string name="dry_gauge_10cm_x_10cm">Unwashed gauge (10cm x 10cm)</string>
     <string name="notes">Notes</string>
     <string name="projects_name">Projects name</string>
 </resources>
