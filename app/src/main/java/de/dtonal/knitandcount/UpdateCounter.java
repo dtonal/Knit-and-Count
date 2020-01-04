@@ -54,7 +54,7 @@ public class UpdateCounter extends AppCompatActivity implements CounterSavedList
 
     @Override
     public void onCounterSaved(Counter counter) {
-        switchToProjectActivity();
+        this.finish();
     }
 
     private void switchToProjectActivity() {

@@ -13,7 +13,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".AddCounter" />
+        <activity
+            android:name=".AddCounter"
+            android:noHistory="true" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -24,11 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddProject" />
-        <activity android:name=".UpdateCounter"/>
+        <activity
+            android:name=".AddProject"
+            android:noHistory="true" />
+        <activity
+            android:name=".UpdateCounter"
+            android:noHistory="true" />
         <activity android:name=".ShowProject"
+            android:launchMode="singleTask"
             android:permission="android.permission.READ_EXTERNAL_STORAGE"/>
-        <activity android:name=".UpdateProject"/>
+        <activity
+            android:name=".UpdateProject"
+            android:noHistory="true" />
     </application>
 
 </manifest>
