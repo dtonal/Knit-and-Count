@@ -9,6 +9,10 @@
         android:id="@+id/addChangePdfMenuItem"
         android:icon="@drawable/ic_pdf"
         />
+    <item
+        android:id="@+id/removePdfMenuItem"
+        android:icon="@drawable/ic_clear"
+        android:title="@string/remove_current_pdf" />
     <item android:title="@string/delete_project"
         android:id="@+id/deleteProject"
         android:icon="@drawable/ic_delete"/>

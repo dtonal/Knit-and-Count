@@ -141,6 +141,8 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
                 return true;
             case R.id.deleteProject:
                 ProjectService.deleteProject(this.project, this, projectDao);
+            case R.id.removePdfMenuItem:
+                removePdf();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -151,6 +153,18 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/pdf");
         startActivityForResult(intent, PDF_REQUEST);
+    }
+
+    private void removePdf() {
+        File projectsDir = FileUtil.getOrCreateProjectFolder(getApplicationContext(), project_id);
+        File copy = new File(projectsDir + "/project.pdf");
+        if (copy.exists()) {
+            copy.delete();
+        }
+        if (this.pdfState != null) {
+            this.pdfState.update(1f, 0f, 0f);
+        }
+        updatePdfView();
     }
 
     @Override
@@ -179,7 +193,10 @@ public class ShowProject extends AppCompatActivity implements CounterForProjectL
         File projectsDir = FileUtil.getOrCreateProjectFolder(getApplicationContext(), project_id);
         File projectPdf = new File(projectsDir+"/project.pdf");
         if(projectPdf.exists()){
+            pdfView.setVisibility(View.VISIBLE);
             pdfView.fromFile(projectPdf).onRender(this).load();
+        } else {
+            pdfView.setVisibility(View.INVISIBLE);
         }
     }
 
