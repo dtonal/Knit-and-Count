@@ -9,6 +9,8 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 import de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.data.dao.ProjectDao;
 import de.dtonal.knitandcount.data.model.Project;
@@ -18,7 +20,6 @@ import de.dtonal.knitandcount.service.ProjectService;
 import de.dtonal.knitandcount.task.project.UpdateProjectTask;
 
 public class UpdateProject extends AppCompatActivity implements ProjectSavedListener, ProjectForIdListener {
-    private static final String TAG = "AddProject";
     private EditText editTextProjectName;
     private EditText editTextNeedleSize;
     private EditText editTextYardage;
@@ -43,7 +44,7 @@ public class UpdateProject extends AppCompatActivity implements ProjectSavedList
         editTextYardage = findViewById(R.id.yardage);
         editTextNeedleSize = findViewById(R.id.needlesize);
 
-        int project_id = getIntent().getExtras().getInt("project_id");
+        int project_id = Objects.requireNonNull(getIntent().getExtras()).getInt("project_id");
         ProjectDao projectDao = DataBaseService.getOrInitAppDataBase(getApplicationContext()).projectDao();
         ProjectService.loadProjectById(project_id, this, projectDao);
 

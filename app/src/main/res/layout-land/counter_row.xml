@@ -2,22 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="6dp">
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:weightSum="5">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="5">
 
         <TextView
             android:id="@+id/counter_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:maxLines="1"
             android:text="@string/loading"
+            android:layout_gravity="center"
             android:textSize="24sp" />
 
         <Button
@@ -43,5 +39,4 @@
             android:layout_weight="1"
             android:text="@string/increment"
             android:textSize="24sp" />
-    </LinearLayout>
 </LinearLayout>

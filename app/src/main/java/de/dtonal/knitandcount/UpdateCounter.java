@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 import de.dtonal.knitandcount.data.DataBaseService;
 import de.dtonal.knitandcount.data.dao.CounterDao;
 import de.dtonal.knitandcount.data.model.Counter;
@@ -31,7 +33,7 @@ public class UpdateCounter extends AppCompatActivity implements CounterSavedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_counter);
 
-        int counterId = getIntent().getExtras().getInt("counter_id");
+        int counterId = Objects.requireNonNull(getIntent().getExtras()).getInt("counter_id");
 
         counterName = findViewById(R.id.counterName);
         startValue = findViewById(R.id.startValue);

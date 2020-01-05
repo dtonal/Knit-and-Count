@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 public class FileUtil {
     private static void createFolderIfNotExists(File folder) {
@@ -30,7 +31,7 @@ public class FileUtil {
                 new FileOutputStream(copy))) {
             byte[] buffer = new byte[1024];
             int lengthRead;
-            while ((lengthRead = in.read(buffer)) > 0) {
+            while ((lengthRead = Objects.requireNonNull(in).read(buffer)) > 0) {
                 out.write(buffer, 0, lengthRead);
                 out.flush();
             }
