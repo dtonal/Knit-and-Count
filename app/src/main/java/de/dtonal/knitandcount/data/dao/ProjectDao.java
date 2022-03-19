@@ -14,7 +14,7 @@ public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertProject(Project project);
 
-    @Query("SELECT * FROM project order by creation_date")
+    @Query("SELECT * FROM project order by creation_date desc")
     Project[] getAllProjects();
 
     @Query("SELECT * FROM project where id = :id")

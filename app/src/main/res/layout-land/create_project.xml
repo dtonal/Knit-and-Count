@@ -61,23 +61,23 @@
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/gauge_wet"
+                android:id="@+id/gauge_dry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/wet_gauge_10cm_x_10cm" />
+                android:hint="@string/dry_gauge_10cm_x_10cm" />
         </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/gauge_dry"
+                android:id="@+id/gauge_wet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/dry_gauge_10cm_x_10cm" />
+                android:hint="@string/wet_gauge_10cm_x_10cm" />
         </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
